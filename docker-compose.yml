@@ -1,0 +1,11 @@
+version: "1"
+services:
+  nginx-server:
+    build: ./nginx-server
+    ports:
+      - "8080:80"
+
+  node-server:
+    depends_on:
+      - nginx-server
+    build: ./node-server
