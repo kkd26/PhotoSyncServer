@@ -1,11 +1,12 @@
 "use strict";
 
 import express from "express";
+import { DESCRIPTION, DIR, HOST, PORT, setDescription } from "./global";
 import { apiRouter } from "./routers";
+import { genDescription } from "./utils/file";
 
-// Constants
-const PORT = 1234;
-const HOST = "0.0.0.0";
+setDescription(genDescription(DIR));
+console.log(DESCRIPTION);
 
 // App
 const app = express();

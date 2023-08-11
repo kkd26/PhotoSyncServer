@@ -1,16 +1,21 @@
 import { Router } from "express";
-import multer from "multer";
+import { addHash } from "../global";
+import { getHash } from "../utils/file";
+import { upload } from "../utils/upload";
 
 export const apiRouter = Router();
-const upload = multer({ dest: ".tmp/" });
 
-apiRouter.get("/", (req, res) => {
+apiRouter.get("/", (_, res) => {
   res.send("Hello from your express.js");
 });
 
-apiRouter.post("/upload", upload.single("some-file"), (req, res) => {
-  const file = req.file;
+apiRouter.post("/upload", upload.single("image"), (req, res) => {
+  console.log(req.file);
+  const file = req.file || { destination: "", path: "" };
+  const { destination, path } = file;
+  const hash = getHash(path);
 
-  console.log(file);
   res.sendStatus(200);
+
+  addHash(destination, hash);
 });
