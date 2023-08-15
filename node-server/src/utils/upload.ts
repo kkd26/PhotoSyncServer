@@ -20,7 +20,6 @@ export const upload = multer({
   storage,
   fileFilter: (req, _, cb) => {
     const { albumTitle, hash } = req.body;
-    const dest = `${DIR}/${albumTitle}`;
-    cb(null, !isHashInDesc(dest, hash));
+    cb(null, !isHashInDesc(albumTitle, hash));
   },
 });

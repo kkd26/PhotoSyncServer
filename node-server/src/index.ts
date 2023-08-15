@@ -1,6 +1,7 @@
 "use strict";
 
 import express from "express";
+import morgan from "morgan";
 import { HOST, PORT } from "./global";
 import { apiRouter } from "./routers";
 import { initDescription } from "./utils/description";
@@ -10,6 +11,7 @@ initDescription();
 // App
 const app = express();
 
+app.use(morgan("tiny"));
 app.use("/api", apiRouter);
 
 app.all("/", (req, res) => {

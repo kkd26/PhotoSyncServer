@@ -1,5 +1,9 @@
+import bodyParser from "body-parser";
 import { Router } from "express";
-import { addHashAndWrite } from "../utils/description";
+import {
+  addHashAndWrite,
+  isHashInDesc
+} from "../utils/description";
 import { getHash } from "../utils/file";
 import { upload } from "../utils/upload";
 
@@ -20,4 +24,12 @@ apiRouter.post("/upload", upload.single("image"), (req, res) => {
 
   res.sendStatus(201);
   addHashAndWrite(destination, hash);
+});
+
+type GetSyncBodyType = { albumTitle: string; hashes: string[] };
+
+apiRouter.post("/getSync", bodyParser.json(), (req, res) => {
+  const { albumTitle, hashes }: GetSyncBodyType = req.body;
+  const hashesToSync = hashes.filter((hash) => !isHashInDesc(albumTitle, hash));
+  res.status(200).json(hashesToSync);
 });

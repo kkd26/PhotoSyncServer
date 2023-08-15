@@ -76,7 +76,8 @@ export const addHashAndWrite = (dir: string, hash: string) => {
   writeDesc(addHash(dir, hash));
 };
 
-export const isHashInDesc = (dir: string, hash: string) => {
+export const isHashInDesc = (albumTitle: string, hash: string) => {
+  const dir = `${DIR}/${albumTitle}`;
   if (dir in DESCRIPTION && DESCRIPTION[dir].has(hash)) return true;
   return false;
 };
@@ -103,5 +104,5 @@ export const initDescription = () => {
     writeDesc(desc1);
   }
 
-  setDescription(desc2);
+  setDescription(desc1);
 };
