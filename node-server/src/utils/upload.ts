@@ -1,5 +1,6 @@
 import multer from "multer";
 import { DIR } from "../global";
+import { isHashInDesc } from "./description";
 import { createDirectory } from "./file";
 
 const storage = multer.diskStorage({
@@ -10,8 +11,16 @@ const storage = multer.diskStorage({
     else next(new Error(`Unable to create directory ${albumTitle}`), dest);
   },
   filename: (_, file, next) => {
-    next(null, file.originalname);
+    const name = file.originalname.replace(/([^a-z0-9_. ]+)/gi, "-");
+    next(null, name);
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({
+  storage,
+  fileFilter: (req, _, cb) => {
+    const { albumTitle, hash } = req.body;
+    const dest = `${DIR}/${albumTitle}`;
+    cb(null, !isHashInDesc(dest, hash));
+  },
+});

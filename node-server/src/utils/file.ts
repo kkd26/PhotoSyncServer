@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import fs from "fs";
-import { Description } from "../global";
 
 export const getDirectories = (path: string) => {
   try {
@@ -39,31 +38,6 @@ export const getHash = (path: string) => {
   } catch (err) {
     console.error(err);
     return "";
-  }
-};
-
-export const genDescription = (path: string) => {
-  try {
-    createDirectory(path);
-
-    const description: Description = {};
-    getDirectories(path).map(
-      (dir) =>
-        (description[dir] = new Set<string>(
-          getFiles(dir).map((file) => getHash(file))
-        ))
-    );
-
-    const stringDesc: { [dir: string]: string[] } = {};
-    Object.keys(description).forEach((dir) => {
-      stringDesc[dir] = [...description[dir]];
-    });
-
-    fs.writeFileSync(path + "/desc.json", JSON.stringify(stringDesc));
-    return description;
-  } catch (err) {
-    console.error(err);
-    return {};
   }
 };
 

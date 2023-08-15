@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addHash } from "../global";
+import { addHashAndWrite } from "../utils/description";
 import { getHash } from "../utils/file";
 import { upload } from "../utils/upload";
 
@@ -10,12 +10,14 @@ apiRouter.get("/", (_, res) => {
 });
 
 apiRouter.post("/upload", upload.single("image"), (req, res) => {
-  console.log(req.file);
-  const file = req.file || { destination: "", path: "" };
+  const { file } = req;
+  console.log(file);
+
+  if (!file) return res.sendStatus(304);
+
   const { destination, path } = file;
   const hash = getHash(path);
 
-  res.sendStatus(200);
-
-  addHash(destination, hash);
+  res.sendStatus(201);
+  addHashAndWrite(destination, hash);
 });

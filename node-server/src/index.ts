@@ -1,12 +1,11 @@
 "use strict";
 
 import express from "express";
-import { DESCRIPTION, DIR, HOST, PORT, setDescription } from "./global";
+import { HOST, PORT } from "./global";
 import { apiRouter } from "./routers";
-import { genDescription } from "./utils/file";
+import { initDescription } from "./utils/description";
 
-setDescription(genDescription(DIR));
-console.log(DESCRIPTION);
+initDescription();
 
 // App
 const app = express();
