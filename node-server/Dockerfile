@@ -1,5 +1,6 @@
 FROM node:18
-WORKDIR /usr/src/app
+ARG APPPATH
+WORKDIR ${APPPATH}
 COPY package*.json .
 RUN npm install
 COPY . .

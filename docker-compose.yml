@@ -8,4 +8,14 @@ services:
       - node-server
 
   node-server:
-    build: ./node-server
+    build:
+      context: ./node-server
+      args:
+        APPPATH: ${APPPATH}
+    environment:
+      PHOTOS_DIR: ${PHOTOS_DIR}
+    volumes:
+      - photo-volume:${APPPATH}/photos
+
+volumes:
+  photo-volume:
