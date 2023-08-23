@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addHashAndWrite } from "../utils/description";
+import { addPhotoAndWrite } from "../utils/description";
 import { getHash } from "../utils/file";
 import { upload } from "../utils/upload";
 
@@ -13,7 +13,8 @@ uploadRouter.post("/", upload.single("image"), (req, res) => {
 
   const { destination, path } = file;
   const hash = getHash(path);
+  const date = req.body.date;
 
   res.sendStatus(201);
-  addHashAndWrite(destination, hash);
+  addPhotoAndWrite(destination, hash, date);
 });

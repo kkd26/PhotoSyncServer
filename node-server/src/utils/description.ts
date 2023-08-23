@@ -2,24 +2,39 @@ import fs from "fs";
 import { DESC_PATH, DIR } from "../global";
 import { createDirectory, getDirectories, getFiles, getHash } from "./file";
 
+type Photo = number;
+
 export type Description = {
-  [dir: string]: Set<string>;
+  [dir: string]: Map<string, Photo>;
 };
 
 let DESCRIPTION: Description = {};
+
+export const getSorted = (albumTitle: string): string[] => {
+  const dir = `${DIR}/${albumTitle}`;
+  if (dir in DESCRIPTION) {
+    const map = [...DESCRIPTION[dir]];
+    const sorted = map.sort(
+      ([_hash1, date1], [_hash2, date2]) => date2 - date1
+    );
+    return sorted.map(([hash, date]) => hash);
+  }
+  return [];
+};
 
 export const logDescription = () => {
   console.log(DESCRIPTION);
 };
 
-const areSetsEqual = (a: Set<any>, b: Set<any>) =>
-  a.size === b.size && [...a].every((value) => b.has(value));
+const areMapsEqual = (a: Map<any, any>, b: Map<any, any>) =>
+  a.size === b.size &&
+  Array.from(a.keys()).every((key) => a.get(key) === b.get(key));
 
 export const areDescEqual = (a: Description, b: Description) => {
   if (Object.keys(a).length !== Object.keys(b).length) return false;
 
   return Object.keys(a).every((dir) => {
-    if (dir in b) return areSetsEqual(a[dir], b[dir]);
+    if (dir in b) return areMapsEqual(a[dir], b[dir]);
     return false;
   });
 };
@@ -29,7 +44,7 @@ export const setDescription = (newDescription: Description): void => {
 };
 
 export const toString = (description: Description = DESCRIPTION): string => {
-  const stringDesc: { [dir: string]: string[] } = {};
+  const stringDesc: { [dir: string]: [string, number][] } = {};
   Object.keys(description).forEach((dir) => {
     stringDesc[dir] = [...description[dir]];
   });
@@ -40,18 +55,19 @@ export const toDescription = (stringDescription: string): Description => {
   const desc: Description = {};
   const obj = JSON.parse(stringDescription);
   Object.keys(obj).forEach((dir) => {
-    desc[dir] = new Set(obj[dir]);
+    desc[dir] = new Map(obj[dir]);
   });
   return desc;
 };
 
-export const addHash = (
+export const addPhoto = (
   dir: string,
   hash: string,
+  photo: Photo,
   description: Description = DESCRIPTION
 ) => {
-  if (dir in description) description[dir].add(hash);
-  else description[dir] = new Set([hash]);
+  if (dir in description) description[dir].set(hash, photo);
+  else description[dir] = new Map([[hash, photo]]);
   return description;
 };
 
@@ -72,8 +88,8 @@ export const readDesc = (): Description => {
   }
 };
 
-export const addHashAndWrite = (dir: string, hash: string) => {
-  writeDesc(addHash(dir, hash));
+export const addPhotoAndWrite = (dir: string, hash: string, photo: Photo) => {
+  writeDesc(addPhoto(dir, hash, photo));
 };
 
 export const isHashInDesc = (albumTitle: string, hash: string) => {
@@ -87,8 +103,8 @@ export const genDescription = (): Description => {
 
   getDirectories(DIR).map(
     (dir) =>
-      (description[dir] = new Set<string>(
-        getFiles(dir).map((file) => getHash(file))
+      (description[dir] = new Map<string, Photo>(
+        getFiles(dir).map(({ file, date }) => [getHash(file), date])
       ))
   );
 
@@ -96,13 +112,13 @@ export const genDescription = (): Description => {
 };
 
 export const initDescription = () => {
-  const desc1 = genDescription();
-  const desc2 = readDesc();
+  //const desc1 = genDescription();
+  const desc1 = readDesc();
 
-  if (!areDescEqual(desc1, desc2)) {
-    console.error("Descriptions are different");
-    writeDesc(desc1);
-  }
+  // if (!areDescEqual(desc1, desc2)) {
+  //   console.error("Descriptions are different");
+  //   writeDesc(desc1);
+  // }
 
   setDescription(desc1);
 };

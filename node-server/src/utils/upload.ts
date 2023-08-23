@@ -10,9 +10,8 @@ const storage = multer.diskStorage({
     if (createDirectory(dest)) next(null, dest);
     else next(new Error(`Unable to create directory ${albumTitle}`), dest);
   },
-  filename: (_, file, next) => {
-    const name = file.originalname.replace(/([^a-z0-9_. ]+)/gi, "-");
-    next(null, name);
+  filename: (req, _, next) => {
+    next(null, req.body.hash);
   },
 });
 

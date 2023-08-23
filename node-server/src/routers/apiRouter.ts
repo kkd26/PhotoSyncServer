@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getPhotosRouter } from "./getPhotos";
 import { getSyncRouter } from "./getSync";
 import { uploadRouter } from "./upload";
 
@@ -10,3 +11,4 @@ apiRouter.get("/", (_, res) => {
 
 apiRouter.use("/upload", uploadRouter);
 apiRouter.use("/getSync", getSyncRouter);
+apiRouter.use("/getPhotos", getPhotosRouter);

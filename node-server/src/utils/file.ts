@@ -19,10 +19,15 @@ export const getFiles = (path: string) => {
   try {
     return fs
       .readdirSync(path)
-      .filter((file) => {
-        return fs.statSync(path + "/" + file).isFile();
+      .map((file) => path + "/" + file)
+      .map((file) => {
+        const stats = fs.statSync(file);
+        return { file, date: stats.ctimeMs, isFile: stats.isFile() };
       })
-      .map((dir) => path + "/" + dir);
+      .filter(({ isFile }) => isFile)
+      .map(({ file, date }) => {
+        return { file, date };
+      });
   } catch (err) {
     console.error(err);
     return [];
