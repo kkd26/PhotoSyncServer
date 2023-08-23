@@ -2,6 +2,8 @@ version: "1"
 services:
   nginx-server:
     build: ./nginx-server
+    volumes:
+      - photo-volume:${APPPATH}/${PHOTOS_DIR}
     ports:
       - "8080:80"
     depends_on:
@@ -15,7 +17,7 @@ services:
     environment:
       PHOTOS_DIR: ${PHOTOS_DIR}
     volumes:
-      - photo-volume:${APPPATH}/photos
+      - photo-volume:${APPPATH}/${PHOTOS_DIR}
 
 volumes:
   photo-volume:
