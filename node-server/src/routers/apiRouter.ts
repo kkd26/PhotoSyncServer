@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { checkHashesRouter } from "./checkHashes";
+import { deleteAllRouter } from "./deleteAllRouter";
 import { getSyncedHashesRouter } from "./getSyncedHashes";
 import { uploadRouter } from "./upload";
 
@@ -12,3 +13,5 @@ apiRouter.get("/", (_, res) => {
 apiRouter.use("/upload", uploadRouter);
 apiRouter.use("/checkHashes", checkHashesRouter);
 apiRouter.use("/getSyncedHashes", getSyncedHashesRouter);
+
+apiRouter.use("/deleteAll", deleteAllRouter);
