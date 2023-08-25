@@ -2,12 +2,12 @@ import bodyParser from "body-parser";
 import { Router } from "express";
 import { isHashInDesc } from "../utils/description";
 
-export const getSyncRouter = Router();
+export const checkHashesRouter = Router();
 
-type GetSyncBodyType = { albumTitle: string; hashes: string[] };
+type CheckHashesBodyType = { albumTitle: string; hashes: string[] };
 
-getSyncRouter.post("/", bodyParser.json(), (req, res) => {
-  const { albumTitle, hashes }: GetSyncBodyType = req.body;
+checkHashesRouter.post("/", bodyParser.json(), (req, res) => {
+  const { albumTitle, hashes }: CheckHashesBodyType = req.body;
   const hashesToSync = hashes.filter((hash) => !isHashInDesc(albumTitle, hash));
   res.status(200).json(hashesToSync);
 });

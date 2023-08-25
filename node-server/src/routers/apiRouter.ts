@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getPhotosRouter } from "./getPhotos";
-import { getSyncRouter } from "./getSync";
+import { checkHashesRouter } from "./checkHashes";
+import { getSyncedHashesRouter } from "./getSyncedHashes";
 import { uploadRouter } from "./upload";
 
 export const apiRouter = Router();
@@ -10,5 +10,5 @@ apiRouter.get("/", (_, res) => {
 });
 
 apiRouter.use("/upload", uploadRouter);
-apiRouter.use("/getSync", getSyncRouter);
-apiRouter.use("/getPhotos", getPhotosRouter);
+apiRouter.use("/checkHashes", checkHashesRouter);
+apiRouter.use("/getSyncedHashes", getSyncedHashesRouter);

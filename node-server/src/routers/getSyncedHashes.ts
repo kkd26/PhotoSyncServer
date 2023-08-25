@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { getSorted } from "../utils/description";
 
-export const getPhotosRouter = Router();
+export const getSyncedHashesRouter = Router();
 
-getPhotosRouter.get("/:albumTitle", (req, res) => {
+getSyncedHashesRouter.get("/:albumTitle", (req, res) => {
   const { albumTitle } = req.params;
   res.status(200).json(getSorted(albumTitle));
 });
